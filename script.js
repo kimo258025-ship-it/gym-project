@@ -21,7 +21,6 @@ window.addEventListener("load", () => {
 });
 
 
-
 /* =========================================================
    HEADER SCROLL
 ========================================================= */
@@ -31,17 +30,12 @@ const header = document.getElementById("header");
 window.addEventListener("scroll", () => {
 
     if (window.scrollY > 50) {
-
         header.classList.add("scrolled");
-
     } else {
-
         header.classList.remove("scrolled");
-
     }
 
 });
-
 
 
 /* =========================================================
@@ -64,8 +58,6 @@ menuToggle.addEventListener("click", () => {
 });
 
 
-/* CLOSE MENU */
-
 document
     .querySelectorAll(".nav-link")
     .forEach(link => {
@@ -79,7 +71,6 @@ document
         });
 
     });
-
 
 
 /* =========================================================
@@ -140,7 +131,6 @@ window.addEventListener(
     "scroll",
     updateActiveLink
 );
-
 
 
 /* =========================================================
@@ -231,7 +221,6 @@ const statsObserver =
 statsObserver.observe(statsSection);
 
 
-
 /* =========================================================
    REVEAL ANIMATION
 ========================================================= */
@@ -280,7 +269,6 @@ revealElements.forEach(element => {
 });
 
 
-
 /* =========================================================
    FAQ ACCORDION
 ========================================================= */
@@ -299,7 +287,6 @@ faqItems.forEach(item => {
 
 
     question.addEventListener("click", () => {
-
 
         const isOpen =
             item.classList.contains("open");
@@ -328,7 +315,6 @@ faqItems.forEach(item => {
     });
 
 });
-
 
 
 /* =========================================================
@@ -422,7 +408,6 @@ dots.forEach((dot, index) => {
 });
 
 
-
 /* =========================================================
    SCHEDULE TABS
 ========================================================= */
@@ -500,38 +485,24 @@ function renderSchedule(day) {
         row.innerHTML = `
 
             <div class="class-time">
-
                 ${item[0]}
-
                 <small>
                     ${item[0].includes("PM") ? "PM" : "AM"}
                 </small>
-
             </div>
-
 
             <div class="class-name">
-
-                <span>
-                    ${item[1]}
-                </span>
-
-                <strong>
-                    ${item[2]}
-                </strong>
-
+                <span>${item[1]}</span>
+                <strong>${item[2]}</strong>
             </div>
-
 
             <div class="class-trainer">
                 ${item[3]}
             </div>
 
-
             <div class="class-level">
                 ${item[4]}
             </div>
-
 
             <a
                 href="#contact"
@@ -555,9 +526,7 @@ dayButtons.forEach(button => {
     button.addEventListener("click", () => {
 
         dayButtons.forEach(btn => {
-
             btn.classList.remove("active");
-
         });
 
 
@@ -575,9 +544,8 @@ dayButtons.forEach(button => {
 });
 
 
-
 /* =========================================================
-   CONTACT FORM
+   REAL CONTACT / REGISTRATION FORM
 ========================================================= */
 
 const contactForm =
@@ -587,26 +555,92 @@ const formSuccess =
     document.getElementById("formSuccess");
 
 
-contactForm.addEventListener("submit", event => {
+contactForm.addEventListener("submit", async event => {
 
     event.preventDefault();
 
+    const submitButton =
+        contactForm.querySelector(
+            'button[type="submit"]'
+        );
 
-    formSuccess.textContent =
-        "✓ Message received. Our team will contact you shortly.";
+    const originalButtonText =
+        submitButton.innerHTML;
+
+    submitButton.disabled = true;
+    submitButton.innerHTML = "SENDING...";
+
+    formSuccess.textContent = "";
 
 
-    contactForm.reset();
+    const formData =
+        new FormData(contactForm);
 
 
-    setTimeout(() => {
+    try {
 
-        formSuccess.textContent = "";
+        const response =
+            await fetch(
+                "https://formsubmit.co/ajax/kimo86652@gmail.com",
+                {
+                    method: "POST",
+                    body: formData,
+                    headers: {
+                        Accept: "application/json"
+                    }
+                }
+            );
 
-    }, 5000);
+
+        const result =
+            await response.json();
+
+
+        if (
+            !response.ok ||
+            result.success === false
+        ) {
+
+            throw new Error(
+                "Submission failed"
+            );
+
+        }
+
+
+        formSuccess.textContent =
+            "✓ Registration received. Our team will contact you shortly.";
+
+        contactForm.reset();
+
+
+    } catch (error) {
+
+        console.error(
+            "Form submission error:",
+            error
+        );
+
+        formSuccess.textContent =
+            "✕ Something went wrong. Please try again.";
+
+    } finally {
+
+        submitButton.disabled = false;
+
+        submitButton.innerHTML =
+            originalButtonText;
+
+
+        setTimeout(() => {
+
+            formSuccess.textContent = "";
+
+        }, 7000);
+
+    }
 
 });
-
 
 
 /* =========================================================
@@ -642,7 +676,6 @@ backTop.addEventListener("click", () => {
 });
 
 
-
 /* =========================================================
    PARALLAX HERO
 ========================================================= */
@@ -669,7 +702,7 @@ window.addEventListener("scroll", () => {
 
 
 /* =========================================================
-   BUTTON HOVER SOUND-LIKE FEEDBACK
+   BUTTON HOVER
 ========================================================= */
 
 const buttons =
@@ -688,7 +721,6 @@ buttons.forEach(button => {
 });
 
 
-
 /* =========================================================
    PREVENT HASH JUMP GLITCH
 ========================================================= */
@@ -697,21 +729,24 @@ document
     .querySelectorAll('a[href^="#"]')
     .forEach(anchor => {
 
-        anchor.addEventListener("click", function (event) {
+        anchor.addEventListener(
+            "click",
+            function (event) {
 
-            const target =
-                document.querySelector(
-                    this.getAttribute("href")
-                );
+                const target =
+                    document.querySelector(
+                        this.getAttribute("href")
+                    );
 
-            if (!target) return;
+                if (!target) return;
 
-            event.preventDefault();
+                event.preventDefault();
 
-            target.scrollIntoView({
-                behavior: "smooth"
-            });
+                target.scrollIntoView({
+                    behavior: "smooth"
+                });
 
-        });
+            }
+        );
 
     });
