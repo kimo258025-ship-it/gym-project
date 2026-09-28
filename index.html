@@ -1870,6 +1870,10 @@
 
             <form class="contact-form" id="contactForm">
 
+                <input type="hidden" name="_subject" value="New IRONCORE Gym Registration">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="_captcha" value="true">
+
 
                 <div class="form-row">
 
@@ -1881,6 +1885,7 @@
 
                         <input
                             type="text"
+                            name="name"
                             placeholder="John Doe"
                             required
                         >
@@ -1896,6 +1901,7 @@
 
                         <input
                             type="email"
+                            name="email"
                             placeholder="john@email.com"
                             required
                         >
@@ -1915,6 +1921,7 @@
 
                         <input
                             type="tel"
+                            name="phone"
                             placeholder="+20 100 000 0000"
                         >
 
@@ -1927,7 +1934,7 @@
                             INTERESTED IN
                         </label>
 
-                        <select>
+                        <select name="interest" required>
 
                             <option>
                                 Membership
@@ -1959,6 +1966,7 @@
                     </label>
 
                     <textarea
+                        name="message"
                         placeholder="Tell us about your goals..."
                         required
                     ></textarea>
