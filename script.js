@@ -21,6 +21,7 @@ window.addEventListener("load", () => {
 });
 
 
+
 /* =========================================================
    HEADER SCROLL
 ========================================================= */
@@ -30,12 +31,17 @@ const header = document.getElementById("header");
 window.addEventListener("scroll", () => {
 
     if (window.scrollY > 50) {
+
         header.classList.add("scrolled");
+
     } else {
+
         header.classList.remove("scrolled");
+
     }
 
 });
+
 
 
 /* =========================================================
@@ -58,6 +64,8 @@ menuToggle.addEventListener("click", () => {
 });
 
 
+/* CLOSE MENU */
+
 document
     .querySelectorAll(".nav-link")
     .forEach(link => {
@@ -71,6 +79,7 @@ document
         });
 
     });
+
 
 
 /* =========================================================
@@ -131,6 +140,7 @@ window.addEventListener(
     "scroll",
     updateActiveLink
 );
+
 
 
 /* =========================================================
@@ -221,6 +231,7 @@ const statsObserver =
 statsObserver.observe(statsSection);
 
 
+
 /* =========================================================
    REVEAL ANIMATION
 ========================================================= */
@@ -269,6 +280,7 @@ revealElements.forEach(element => {
 });
 
 
+
 /* =========================================================
    FAQ ACCORDION
 ========================================================= */
@@ -287,6 +299,7 @@ faqItems.forEach(item => {
 
 
     question.addEventListener("click", () => {
+
 
         const isOpen =
             item.classList.contains("open");
@@ -315,6 +328,7 @@ faqItems.forEach(item => {
     });
 
 });
+
 
 
 /* =========================================================
@@ -408,6 +422,7 @@ dots.forEach((dot, index) => {
 });
 
 
+
 /* =========================================================
    SCHEDULE TABS
 ========================================================= */
@@ -485,24 +500,38 @@ function renderSchedule(day) {
         row.innerHTML = `
 
             <div class="class-time">
+
                 ${item[0]}
+
                 <small>
                     ${item[0].includes("PM") ? "PM" : "AM"}
                 </small>
+
             </div>
 
+
             <div class="class-name">
-                <span>${item[1]}</span>
-                <strong>${item[2]}</strong>
+
+                <span>
+                    ${item[1]}
+                </span>
+
+                <strong>
+                    ${item[2]}
+                </strong>
+
             </div>
+
 
             <div class="class-trainer">
                 ${item[3]}
             </div>
 
+
             <div class="class-level">
                 ${item[4]}
             </div>
+
 
             <a
                 href="#contact"
@@ -526,7 +555,9 @@ dayButtons.forEach(button => {
     button.addEventListener("click", () => {
 
         dayButtons.forEach(btn => {
+
             btn.classList.remove("active");
+
         });
 
 
@@ -544,8 +575,33 @@ dayButtons.forEach(button => {
 });
 
 
+
 /* =========================================================
-   REAL CONTACT / REGISTRATION FORM
+   SUPABASE CONFIGURATION
+========================================================= */
+
+const SUPABASE_URL =
+    "https://gvdtixjvxvzjncqcntln.supabase.co";
+
+const SUPABASE_ANON_KEY =
+    "sb_publishable_8oJb4HzEplJgeym5axBidQ_3wv9RKVN";
+
+const SUPABASE_READY =
+    SUPABASE_URL !== "YOUR_SUPABASE_URL" &&
+    SUPABASE_ANON_KEY !== "YOUR_SUPABASE_ANON_KEY";
+
+const supabaseClient =
+    SUPABASE_READY
+        ? window.supabase.createClient(
+            SUPABASE_URL,
+            SUPABASE_ANON_KEY
+        )
+        : null;
+
+
+
+/* =========================================================
+   CONTACT FORM
 ========================================================= */
 
 const contactForm =
@@ -555,92 +611,983 @@ const formSuccess =
     document.getElementById("formSuccess");
 
 
-contactForm.addEventListener("submit", async event => {
+contactForm?.addEventListener(
+    "submit",
+    async event => {
 
-    event.preventDefault();
+        event.preventDefault();
 
-    const submitButton =
-        contactForm.querySelector(
-            'button[type="submit"]'
+        const submitButton =
+            contactForm.querySelector(
+                'button[type="submit"]'
+            );
+
+        const originalButtonText =
+            submitButton.innerHTML;
+
+
+        submitButton.disabled = true;
+
+        submitButton.innerHTML =
+            "SENDING...";
+
+        formSuccess.textContent = "";
+
+
+        const formData =
+            new FormData(contactForm);
+
+
+        try {
+
+            const response =
+                await fetch(
+                    "https://formsubmit.co/ajax/kimo86652@gmail.com",
+                    {
+                        method: "POST",
+                        body: formData,
+                        headers: {
+                            Accept:
+                                "application/json"
+                        }
+                    }
+                );
+
+
+            const result =
+                await response.json();
+
+
+            if (
+                !response.ok ||
+                result.success === false
+            ) {
+
+                throw new Error(
+                    "Submission failed"
+                );
+
+            }
+
+
+            formSuccess.textContent =
+                "✓ Registration received. Our team will contact you shortly.";
+
+            contactForm.reset();
+
+
+        } catch (error) {
+
+            console.error(
+                "Form submission error:",
+                error
+            );
+
+            formSuccess.textContent =
+                "✕ Something went wrong. Please try again.";
+
+
+        } finally {
+
+            submitButton.disabled = false;
+
+            submitButton.innerHTML =
+                originalButtonText;
+
+
+            setTimeout(() => {
+
+                formSuccess.textContent = "";
+
+            }, 7000);
+
+        }
+
+    }
+);
+
+
+
+/* =========================================================
+   REAL MEMBERSHIP SYSTEM
+========================================================= */
+
+const memberModal =
+    document.getElementById("memberModal");
+
+const authView =
+    document.getElementById("authView");
+
+const memberView =
+    document.getElementById("memberView");
+
+const authForm =
+    document.getElementById("authForm");
+
+const authTitle =
+    document.getElementById("authTitle");
+
+const authSubtitle =
+    document.getElementById("authSubtitle");
+
+const authName =
+    document.getElementById("authName");
+
+const authEmail =
+    document.getElementById("authEmail");
+
+const authPassword =
+    document.getElementById("authPassword");
+
+const authSubmit =
+    document.getElementById("authSubmit");
+
+const authMessage =
+    document.getElementById("authMessage");
+
+const fullNameGroup =
+    document.getElementById("fullNameGroup");
+
+const signupTab =
+    document.getElementById("signupTab");
+
+const loginTab =
+    document.getElementById("loginTab");
+
+const memberAccountBtn =
+    document.getElementById("memberAccountBtn");
+
+const dashboardChoosePlan =
+    document.getElementById("dashboardChoosePlan");
+
+const logoutBtn =
+    document.getElementById("logoutBtn");
+
+
+let authMode = "signup";
+
+let selectedPlan = null;
+
+let currentUser = null;
+
+
+
+function setMemberMessage(
+    element,
+    message,
+    error = false
+) {
+
+    if (!element) return;
+
+    element.textContent =
+        message;
+
+    element.style.color =
+        error
+            ? "#ff6b6b"
+            : "#bdbdbd";
+
+}
+
+
+
+function openMemberModal(
+    view = "auth"
+) {
+
+    if (!memberModal) return;
+
+    memberModal.classList.add("open");
+
+    memberModal.setAttribute(
+        "aria-hidden",
+        "false"
+    );
+
+    document.body.style.overflow =
+        "hidden";
+
+
+    view === "dashboard" &&
+    currentUser
+        ? showDashboard()
+        : showAuth();
+
+}
+
+
+
+function closeMemberModal() {
+
+    if (!memberModal) return;
+
+    memberModal.classList.remove(
+        "open"
+    );
+
+    memberModal.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    document.body.style.overflow =
+        "";
+
+}
+
+
+
+function showAuth() {
+
+    authView.hidden = false;
+
+    memberView.hidden = true;
+
+    updateAuthMode();
+
+}
+
+
+
+function showDashboard() {
+
+    authView.hidden = true;
+
+    memberView.hidden = false;
+
+    loadMemberDashboard();
+
+}
+
+
+
+function updateAuthMode() {
+
+    const signup =
+        authMode === "signup";
+
+
+    authTitle.textContent =
+        signup
+            ? "CREATE YOUR ACCOUNT."
+            : "WELCOME BACK.";
+
+
+    authSubtitle.textContent =
+        signup
+            ? "Create an account to choose a membership plan and manage your membership."
+            : "Log in to view and manage your IRONCORE membership.";
+
+
+    signupTab.classList.toggle(
+        "active",
+        signup
+    );
+
+
+    loginTab.classList.toggle(
+        "active",
+        !signup
+    );
+
+
+    fullNameGroup.hidden =
+        !signup;
+
+
+    authName.required =
+        signup;
+
+
+    authPassword.autocomplete =
+        signup
+            ? "new-password"
+            : "current-password";
+
+
+    authSubmit.textContent =
+        signup
+            ? "CREATE ACCOUNT"
+            : "LOG IN";
+
+
+    setMemberMessage(
+        authMessage,
+        ""
+    );
+
+}
+
+
+
+function ensureSupabase() {
+
+    if (
+        SUPABASE_READY &&
+        supabaseClient
+    ) {
+
+        return true;
+
+    }
+
+
+    setMemberMessage(
+        authMessage,
+        "Supabase is not configured yet. Add your project URL and anon key in script.js.",
+        true
+    );
+
+
+    return false;
+
+}
+
+
+
+signupTab?.addEventListener(
+    "click",
+    () => {
+
+        authMode = "signup";
+
+        updateAuthMode();
+
+    }
+);
+
+
+loginTab?.addEventListener(
+    "click",
+    () => {
+
+        authMode = "login";
+
+        updateAuthMode();
+
+    }
+);
+
+
+memberAccountBtn?.addEventListener(
+    "click",
+    () => {
+
+        openMemberModal(
+            currentUser
+                ? "dashboard"
+                : "auth"
         );
 
-    const originalButtonText =
-        submitButton.innerHTML;
-
-    submitButton.disabled = true;
-    submitButton.innerHTML = "SENDING...";
-
-    formSuccess.textContent = "";
+    }
+);
 
 
-    const formData =
-        new FormData(contactForm);
+document
+    .querySelectorAll(
+        "[data-close-member]"
+    )
+    .forEach(el => {
+
+        el.addEventListener(
+            "click",
+            closeMemberModal
+        );
+
+    });
 
 
-    try {
+document.addEventListener(
+    "keydown",
+    e => {
 
-        const response =
-            await fetch(
-                "https://formsubmit.co/ajax/kimo86652@gmail.com",
-                {
-                    method: "POST",
-                    body: formData,
-                    headers: {
-                        Accept: "application/json"
+        if (e.key === "Escape") {
+
+            closeMemberModal();
+
+        }
+
+    }
+);
+
+
+
+document
+    .querySelectorAll(".plan-btn")
+    .forEach(button => {
+
+        button.addEventListener(
+            "click",
+            async event => {
+
+                event.preventDefault();
+
+
+                selectedPlan = {
+                    name:
+                        button.dataset.plan,
+
+                    price:
+                        Number(
+                            button.dataset.price
+                        )
+                };
+
+
+                if (!currentUser) {
+
+                    authMode = "signup";
+
+                    openMemberModal(
+                        "auth"
+                    );
+
+
+                    setMemberMessage(
+                        authMessage,
+                        `Create your account to continue with the ${selectedPlan.name} plan.`
+                    );
+
+
+                    return;
+
+                }
+
+
+                openMemberModal(
+                    "dashboard"
+                );
+
+
+                await saveMembership(
+                    selectedPlan.name,
+                    selectedPlan.price
+                );
+
+            }
+        );
+
+    });
+
+
+
+authForm?.addEventListener(
+    "submit",
+    async event => {
+
+        event.preventDefault();
+
+
+        if (!ensureSupabase()) return;
+
+
+        const email =
+            authEmail.value.trim();
+
+        const password =
+            authPassword.value;
+
+
+        authSubmit.disabled =
+            true;
+
+
+        authSubmit.textContent =
+            authMode === "signup"
+                ? "CREATING..."
+                : "LOGGING IN...";
+
+
+        setMemberMessage(
+            authMessage,
+            ""
+        );
+
+
+        try {
+
+            if (
+                authMode === "signup"
+            ) {
+
+                const name =
+                    authName.value.trim();
+
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth.signUp({
+
+                        email,
+
+                        password,
+
+                        options: {
+                            data: {
+                                full_name:
+                                    name
+                            }
+                        }
+
+                    });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                currentUser =
+                    data.user;
+
+
+                if (data.session) {
+
+                    await upsertProfile(
+                        data.user,
+                        name
+                    );
+
+
+                    if (
+                        selectedPlan
+                    ) {
+
+                        await saveMembership(
+                            selectedPlan.name,
+                            selectedPlan.price
+                        );
+
                     }
+
+
+                    showDashboard();
+
+
+                } else {
+
+                    setMemberMessage(
+                        authMessage,
+                        "Account created. Check your email to confirm your account, then log in."
+                    );
+
+
+                    authMode =
+                        "login";
+
+
+                    updateAuthMode();
+
+                }
+
+
+            } else {
+
+                const {
+                    data,
+                    error
+                } =
+                    await supabaseClient.auth.signInWithPassword({
+                        email,
+                        password
+                    });
+
+
+                if (error) {
+
+                    throw error;
+
+                }
+
+
+                currentUser =
+                    data.user;
+
+
+                await upsertProfile(
+                    data.user
+                );
+
+
+                if (
+                    selectedPlan
+                ) {
+
+                    await saveMembership(
+                        selectedPlan.name,
+                        selectedPlan.price
+                    );
+
+                }
+
+
+                showDashboard();
+
+            }
+
+
+        } catch (error) {
+
+            console.error(error);
+
+
+            setMemberMessage(
+                authMessage,
+                error.message ||
+                    "Authentication failed.",
+                true
+            );
+
+
+        } finally {
+
+            authSubmit.disabled =
+                false;
+
+
+            authSubmit.textContent =
+                authMode === "signup"
+                    ? "CREATE ACCOUNT"
+                    : "LOG IN";
+
+        }
+
+    }
+);
+
+
+
+async function upsertProfile(
+    user,
+    name = null
+) {
+
+    const fullName =
+        name ||
+        user.user_metadata?.full_name ||
+        "Member";
+
+
+    const { error } =
+        await supabaseClient
+            .from("profiles")
+            .upsert(
+                {
+                    id:
+                        user.id,
+
+                    full_name:
+                        fullName,
+
+                    email:
+                        user.email
+                },
+                {
+                    onConflict:
+                        "id"
                 }
             );
 
 
-        const result =
-            await response.json();
+    if (error) {
+
+        throw error;
+
+    }
+
+}
 
 
-        if (
-            !response.ok ||
-            result.success === false
-        ) {
 
-            throw new Error(
-                "Submission failed"
+async function saveMembership(
+    planName,
+    price
+) {
+
+    if (!currentUser) return;
+
+
+    const startDate =
+        new Date();
+
+
+    const endDate =
+        new Date(
+            startDate
+        );
+
+
+    endDate.setMonth(
+        endDate.getMonth() + 1
+    );
+
+
+    const { error } =
+        await supabaseClient
+            .from("memberships")
+            .upsert(
+                {
+                    user_id:
+                        currentUser.id,
+
+                    plan:
+                        planName,
+
+                    price:
+                        price,
+
+                    status:
+                        "pending",
+
+                    start_date:
+                        startDate
+                            .toISOString()
+                            .slice(0, 10),
+
+                    end_date:
+                        endDate
+                            .toISOString()
+                            .slice(0, 10)
+                },
+                {
+                    onConflict:
+                        "user_id"
+                }
             );
+
+
+    if (error) {
+
+        setMemberMessage(
+            document.getElementById(
+                "dashboardMessage"
+            ),
+            error.message,
+            true
+        );
+
+        return;
+
+    }
+
+
+    selectedPlan = null;
+
+
+    setMemberMessage(
+        document.getElementById(
+            "dashboardMessage"
+        ),
+        `Your ${planName} membership request has been saved. An administrator can activate it after confirmation/payment.`
+    );
+
+
+    await loadMemberDashboard();
+
+}
+
+
+
+async function loadMemberDashboard() {
+
+    if (
+        !currentUser ||
+        !supabaseClient
+    ) {
+
+        return;
+
+    }
+
+
+    const name =
+        currentUser.user_metadata?.full_name ||
+        "Member";
+
+
+    document.getElementById(
+        "memberName"
+    ).textContent =
+        name.toUpperCase();
+
+
+    document.getElementById(
+        "memberEmail"
+    ).textContent =
+        currentUser.email || "";
+
+
+    const {
+        data,
+        error
+    } =
+        await supabaseClient
+            .from("memberships")
+            .select(
+                "plan, price, status, start_date, end_date"
+            )
+            .eq(
+                "user_id",
+                currentUser.id
+            )
+            .maybeSingle();
+
+
+    if (error) {
+
+        setMemberMessage(
+            document.getElementById(
+                "dashboardMessage"
+            ),
+            error.message,
+            true
+        );
+
+        return;
+
+    }
+
+
+    document.getElementById(
+        "memberPlan"
+    ).textContent =
+        data?.plan ||
+        "No plan";
+
+
+    document.getElementById(
+        "memberStatus"
+    ).textContent =
+        data?.status ||
+        "Not active";
+
+
+    document.getElementById(
+        "memberStart"
+    ).textContent =
+        data?.start_date ||
+        "—";
+
+
+    document.getElementById(
+        "memberEnd"
+    ).textContent =
+        data?.end_date ||
+        "—";
+
+}
+
+
+
+dashboardChoosePlan?.addEventListener(
+    "click",
+    () => {
+
+        closeMemberModal();
+
+
+        document
+            .getElementById(
+                "membership"
+            )
+            ?.scrollIntoView({
+                behavior:
+                    "smooth"
+            });
+
+    }
+);
+
+
+
+logoutBtn?.addEventListener(
+    "click",
+    async () => {
+
+        if (!supabaseClient) return;
+
+
+        const { error } =
+            await supabaseClient.auth.signOut();
+
+
+        if (error) {
+
+            setMemberMessage(
+                document.getElementById(
+                    "dashboardMessage"
+                ),
+                error.message,
+                true
+            );
+
+            return;
 
         }
 
 
-        formSuccess.textContent =
-            "✓ Registration received. Our team will contact you shortly.";
+        currentUser = null;
 
-        contactForm.reset();
-
-
-    } catch (error) {
-
-        console.error(
-            "Form submission error:",
-            error
-        );
-
-        formSuccess.textContent =
-            "✕ Something went wrong. Please try again.";
-
-    } finally {
-
-        submitButton.disabled = false;
-
-        submitButton.innerHTML =
-            originalButtonText;
-
-
-        setTimeout(() => {
-
-            formSuccess.textContent = "";
-
-        }, 7000);
+        closeMemberModal();
 
     }
+);
 
-});
+
+
+async function initializeMembership() {
+
+    if (!SUPABASE_READY) return;
+
+
+    const {
+        data: {
+            session
+        }
+    } =
+        await supabaseClient.auth.getSession();
+
+
+    currentUser =
+        session?.user ||
+        null;
+
+
+    supabaseClient.auth.onAuthStateChange(
+        (
+            _event,
+            sessionState
+        ) => {
+
+            currentUser =
+                sessionState?.user ||
+                null;
+
+
+            if (
+                !currentUser &&
+                memberModal?.classList.contains(
+                    "open"
+                )
+            ) {
+
+                showAuth();
+
+            }
+
+        }
+    );
+
+}
+
+
+initializeMembership();
+
 
 
 /* =========================================================
@@ -651,29 +1598,41 @@ const backTop =
     document.getElementById("backTop");
 
 
-window.addEventListener("scroll", () => {
+window.addEventListener(
+    "scroll",
+    () => {
 
-    if (window.scrollY > 700) {
+        if (window.scrollY > 700) {
 
-        backTop.classList.add("show");
+            backTop.classList.add(
+                "show"
+            );
 
-    } else {
+        } else {
 
-        backTop.classList.remove("show");
+            backTop.classList.remove(
+                "show"
+            );
+
+        }
 
     }
+);
 
-});
 
 
-backTop.addEventListener("click", () => {
+backTop.addEventListener(
+    "click",
+    () => {
 
-    window.scrollTo({
-        top: 0,
-        behavior: "smooth"
-    });
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
 
-});
+    }
+);
+
 
 
 /* =========================================================
@@ -681,44 +1640,61 @@ backTop.addEventListener("click", () => {
 ========================================================= */
 
 const heroBg =
-    document.querySelector(".hero-bg");
+    document.querySelector(
+        ".hero-bg"
+    );
 
 
-window.addEventListener("scroll", () => {
+window.addEventListener(
+    "scroll",
+    () => {
 
-    if (!heroBg) return;
+        if (!heroBg) return;
 
-    const scroll =
-        window.scrollY;
 
-    if (scroll < window.innerHeight) {
+        const scroll =
+            window.scrollY;
 
-        heroBg.style.transform =
-            `translateY(${scroll * .15}px) scale(1.03)`;
+
+        if (
+            scroll <
+            window.innerHeight
+        ) {
+
+            heroBg.style.transform =
+                `translateY(${scroll * .15}px) scale(1.03)`;
+
+        }
 
     }
+);
 
-});
 
 
 /* =========================================================
-   BUTTON HOVER
+   BUTTON HOVER SOUND-LIKE FEEDBACK
 ========================================================= */
 
 const buttons =
-    document.querySelectorAll(".btn");
+    document.querySelectorAll(
+        ".btn"
+    );
 
 
 buttons.forEach(button => {
 
-    button.addEventListener("mouseenter", () => {
+    button.addEventListener(
+        "mouseenter",
+        () => {
 
-        button.style.transition =
-            "transform .25s ease";
+            button.style.transition =
+                "transform .25s ease";
 
-    });
+        }
+    );
 
 });
+
 
 
 /* =========================================================
@@ -726,7 +1702,9 @@ buttons.forEach(button => {
 ========================================================= */
 
 document
-    .querySelectorAll('a[href^="#"]')
+    .querySelectorAll(
+        'a[href^="#"]'
+    )
     .forEach(anchor => {
 
         anchor.addEventListener(
@@ -735,15 +1713,21 @@ document
 
                 const target =
                     document.querySelector(
-                        this.getAttribute("href")
+                        this.getAttribute(
+                            "href"
+                        )
                     );
+
 
                 if (!target) return;
 
+
                 event.preventDefault();
 
+
                 target.scrollIntoView({
-                    behavior: "smooth"
+                    behavior:
+                        "smooth"
                 });
 
             }
