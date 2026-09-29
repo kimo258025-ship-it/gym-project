@@ -23,8 +23,16 @@
         rel="stylesheet"
     >
 
+    <!-- SUPABASE -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
+
+
+<style>
+.member-modal{position:fixed;inset:0;z-index:9999;display:none;align-items:center;justify-content:center;padding:20px}.member-modal.open{display:flex}.member-modal-backdrop{position:absolute;inset:0;background:rgba(0,0,0,.78);backdrop-filter:blur(8px)}.member-modal-card{position:relative;width:min(560px,100%);max-height:90vh;overflow:auto;background:#111;border:1px solid #333;padding:36px;box-shadow:0 30px 100px rgba(0,0,0,.55);color:#fff}.member-close{position:absolute;right:18px;top:12px;background:none;border:0;color:#aaa;font-size:32px;cursor:pointer}.auth-tabs{display:flex;gap:8px;margin:24px 0}.auth-tab{flex:1;padding:13px;border:1px solid #333;background:#181818;color:#aaa;cursor:pointer;font-weight:700}.auth-tab.active{background:#fff;color:#000}.member-form{display:grid;gap:16px}.member-message{min-height:22px;margin:0;color:#bbb}.member-account-btn{background:transparent;border:1px solid #555;color:#fff;padding:12px 16px;font-weight:700;cursor:pointer;margin-left:10px}.member-dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:25px 0}.member-stat{padding:18px;background:#181818;border:1px solid #292929}.member-stat span{display:block;font-size:11px;color:#888;letter-spacing:1px;margin-bottom:7px}.member-stat strong{font-size:18px}.member-actions{display:flex;gap:10px;flex-wrap:wrap}.member-actions .btn{cursor:pointer;border:0}.member-modal .input-group label{display:block;margin-bottom:7px}.member-modal input{width:100%;box-sizing:border-box;padding:14px;background:#181818;border:1px solid #333;color:#fff}.member-modal input:focus{outline:1px solid #fff}.member-modal [hidden]{display:none!important}@media(max-width:700px){.member-modal-card{padding:26px 20px}.member-dashboard-grid{grid-template-columns:1fr}.member-account-btn{display:none}}
+</style>
 
 </head>
 
@@ -110,6 +118,10 @@
             JOIN NOW
             <span>↗</span>
         </a>
+
+        <button class="member-account-btn" id="memberAccountBtn" type="button">
+            MEMBER LOGIN
+        </button>
 
 
         <button
@@ -1223,7 +1235,7 @@
                 </ul>
 
 
-                <a href="#contact" class="price-btn">
+                <a href="#" class="price-btn plan-btn" data-plan="Starter" data-price="29">
                     CHOOSE STARTER
                 </a>
 
@@ -1289,7 +1301,7 @@
                 </ul>
 
 
-                <a href="#contact" class="price-btn">
+                <a href="#" class="price-btn plan-btn" data-plan="Performance" data-price="59">
                     CHOOSE PERFORMANCE
                 </a>
 
@@ -1350,7 +1362,7 @@
                 </ul>
 
 
-                <a href="#contact" class="price-btn">
+                <a href="#" class="price-btn plan-btn" data-plan="Elite" data-price="99">
                     CHOOSE ELITE
                 </a>
 
@@ -2037,9 +2049,81 @@
 
 
 
+
+<!-- =====================================================
+     MEMBERSHIP AUTHENTICATION
+===================================================== -->
+
+<div class="member-modal" id="memberModal" aria-hidden="true">
+    <div class="member-modal-backdrop" data-close-member></div>
+    <div class="member-modal-card">
+        <button class="member-close" type="button" data-close-member aria-label="Close">×</button>
+
+        <div id="authView">
+            <span class="eyebrow">IRONCORE MEMBERS</span>
+            <h2 id="authTitle">CREATE YOUR ACCOUNT.</h2>
+            <p id="authSubtitle">Create an account to choose a membership plan and manage your membership.</p>
+
+            <div class="auth-tabs">
+                <button type="button" class="auth-tab active" id="signupTab">SIGN UP</button>
+                <button type="button" class="auth-tab" id="loginTab">LOG IN</button>
+            </div>
+
+            <form id="authForm" class="member-form">
+                <div class="input-group" id="fullNameGroup">
+                    <label>FULL NAME</label>
+                    <input id="authName" type="text" autocomplete="name" placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label>EMAIL ADDRESS</label>
+                    <input id="authEmail" type="email" autocomplete="email" placeholder="john@email.com" required>
+                </div>
+                <div class="input-group">
+                    <label>PASSWORD</label>
+                    <input id="authPassword" type="password" autocomplete="new-password" minlength="6" placeholder="Minimum 6 characters" required>
+                </div>
+                <button class="btn btn-primary" type="submit" id="authSubmit">CREATE ACCOUNT</button>
+                <p class="member-message" id="authMessage"></p>
+            </form>
+        </div>
+
+        <div id="memberView" hidden>
+            <span class="eyebrow">MEMBER DASHBOARD</span>
+            <h2>WELCOME, <span id="memberName">MEMBER</span>.</h2>
+            <p id="memberEmail"></p>
+
+            <div class="member-dashboard-grid">
+                <div class="member-stat">
+                    <span>PLAN</span>
+                    <strong id="memberPlan">No plan</strong>
+                </div>
+                <div class="member-stat">
+                    <span>STATUS</span>
+                    <strong id="memberStatus">Not active</strong>
+                </div>
+                <div class="member-stat">
+                    <span>START DATE</span>
+                    <strong id="memberStart">—</strong>
+                </div>
+                <div class="member-stat">
+                    <span>END DATE</span>
+                    <strong id="memberEnd">—</strong>
+                </div>
+            </div>
+
+            <div class="member-actions">
+                <button type="button" class="btn btn-primary" id="dashboardChoosePlan">CHOOSE / CHANGE PLAN</button>
+                <button type="button" class="btn btn-light" id="logoutBtn">LOG OUT</button>
+            </div>
+            <p class="member-message" id="dashboardMessage"></p>
+        </div>
+    </div>
+</div>
+
 <!-- =====================================================
      FOOTER
 ===================================================== -->
+
 
 <footer class="footer">
 
