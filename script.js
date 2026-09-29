@@ -1166,7 +1166,7 @@ authForm?.addEventListener(
                     }
 
 
-                    showDashboard();
+                   showDashboard();
 
 
                 } else {
@@ -1226,7 +1226,7 @@ authForm?.addEventListener(
                 }
 
 
-                showDashboard();
+                window.location.href = "member-dashboard.html";
 
             }
 
